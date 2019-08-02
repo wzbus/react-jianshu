@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { actionCreators } from './store';
 import { CSSTransition } from 'react-transition-group';
 import {
   HeaderWrapper,
@@ -8,6 +9,11 @@ import {
   NavItem,
   NavSearch,
   SearchWrapper,
+  SearchInfo,
+	SearchInfoTitle,
+	SearchInfoSwitch,
+  SearchInfoList,
+  SearchInfoItem,
   Addition,
   Button
 } from './style';
@@ -32,6 +38,7 @@ const Header = (props) => {
             ></NavSearch>
           </CSSTransition>
           <i className={props.focused ? 'focused iconfont zoom' : 'iconfont zoom'}>&#xe653;</i>
+          {getListArea(props.focused)}
         </SearchWrapper>
       </Nav>
       <Addition>
@@ -45,23 +52,40 @@ const Header = (props) => {
   )
 }
 
+const getListArea = (show) => {
+  if (show) {
+    return (
+      <SearchInfo>
+        <SearchInfoTitle>热门搜索
+          <SearchInfoSwitch>换一批</SearchInfoSwitch>
+        </SearchInfoTitle>
+        <SearchInfoList>
+          <SearchInfoItem>教育</SearchInfoItem>
+        </SearchInfoList>
+      </SearchInfo>
+    )
+  } else {
+    return null;
+  }
+}
+
 const mapStateToProps = (state) => {
   return {
-    focused: state.focused
+    focused: state.header.focused
   }
 }
 
 const mapDispathToProps = (dispatch) => {
   return {
     handleInputFocus () {
-      const action = {
-        type: 'search_focus',
-      };
-      dispatch(action);
+      dispatch(actionCreators.getList());
+      dispatch({
+        type: 'search_focus'
+      });
     },
     handleInputBlur () {
       const action = {
-        type: 'search_blur',
+        type: 'search_blur'
       };
       dispatch(action);
     }
