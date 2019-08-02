@@ -41,7 +41,10 @@ export const NavItem = styled.div`
 	}
 	&.active {
 		color: #ea6f5a;
-	}
+  }
+  &.space {
+    margin-right: 30px;
+  }
 `;
 
 export const SearchWrapper = styled.div`
@@ -56,7 +59,7 @@ export const SearchWrapper = styled.div`
 		border-radius: 15px;
 		text-align: center;
 		&.focused {
-			background: #777;
+			background: #999;
 			color: #fff;
 		}
 	}
