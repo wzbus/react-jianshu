@@ -82,7 +82,7 @@ class Header extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapState = (state) => {
   return {
     focused: state.getIn(['header', 'focused']),
     mouseIn: state.getIn(['header', 'mouseIn']),
@@ -92,7 +92,7 @@ const mapStateToProps = (state) => {
   }
 }
 
-const mapDispathToProps = (dispatch) => {
+const mapDispath = (dispatch) => {
   return {
     handleInputFocus (list) {
       (list.size === 0) && dispatch(actionCreators.getList());
@@ -133,4 +133,4 @@ const mapDispathToProps = (dispatch) => {
   }
 }
 
-export default connect(mapStateToProps, mapDispathToProps)(Header);
+export default connect(mapState, mapDispath)(Header);
