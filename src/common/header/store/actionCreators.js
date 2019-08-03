@@ -7,7 +7,8 @@ export const getList = () => {
       const data = res.data;
       const action = {
         type: 'changeList',
-        data: fromJS(data.data)
+        data: fromJS(data.data),
+        totalPage: Math.ceil(data.data.length / 10)
       };
 			dispatch(action);
 		}).catch(() => {
@@ -15,3 +16,8 @@ export const getList = () => {
 		})
   }
 }
+
+export const changePage = (page) => ({
+	type: 'change_page',
+	page
+});

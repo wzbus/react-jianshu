@@ -20,19 +20,26 @@ import {
 
 class Header extends Component {
   getListArea () {
-    if (this.props.focused) {
+    const newList = this.props.list.toJS();
+		const pageList = [];
+
+		if (newList.length) {
+			for (let i = (this.props.page - 1) * 10; i < this.props.page * 10; i++) {
+				pageList.push(
+					<SearchInfoItem key={newList[i]}>{newList[i]}</SearchInfoItem>
+				)
+			}
+    }
+    if (this.props.focused || this.props.mouseIn) {
       return (
-        <SearchInfo>
+        <SearchInfo onMouseEnter={this.props.handleMouseEnter} onMouseLeave={this.props.handleMouseLeave}>
           <SearchInfoTitle>热门搜索
-          <SearchInfoSwitch>换一批</SearchInfoSwitch>
+          <SearchInfoSwitch onClick={() => this.props.handleChangePage(this.props.page, this.props.totalPage, this.spinIcon)}>
+            <i ref={(icon) => {this.spinIcon = icon}} className="iconfont spin">&#xe601;</i>
+            换一批
+          </SearchInfoSwitch>
           </SearchInfoTitle>
-          <SearchInfoList>
-            {
-              this.props.list.map((item) => {
-                return <SearchInfoItem key={item}>{item}</SearchInfoItem>
-              })
-            }
-          </SearchInfoList>
+          <SearchInfoList>{pageList}</SearchInfoList>
         </SearchInfo>
       )
     } else {
@@ -55,7 +62,7 @@ class Header extends Component {
             <CSSTransition in={this.props.focused} timeout={200} classNames="slide">
               <NavSearch
                 className={this.props.focused ? 'focused' : ''}
-                onFocus={this.props.handleInputFocus}
+                onFocus={this.props.handleInputFocus(this.props.list)}
                 onBlur={this.props.handleInputBlur}
               ></NavSearch>
             </CSSTransition>
@@ -78,24 +85,51 @@ class Header extends Component {
 const mapStateToProps = (state) => {
   return {
     focused: state.getIn(['header', 'focused']),
-		list: state.getIn(['header', 'list'])
+    mouseIn: state.getIn(['header', 'mouseIn']),
+    list: state.getIn(['header', 'list']),
+    page: state.getIn(['header', 'page']),
+    totalPage: state.getIn(['header', 'totalPage'])
   }
 }
 
 const mapDispathToProps = (dispatch) => {
   return {
-    handleInputFocus () {
-      dispatch(actionCreators.getList());
+    handleInputFocus (list) {
+      (list.size === 0) && dispatch(actionCreators.getList());
       dispatch({
         type: 'search_focus'
       });
     },
     handleInputBlur () {
-      const action = {
+      dispatch({
         type: 'search_blur'
-      };
-      dispatch(action);
-    }
+      });
+    },
+    handleMouseEnter() {
+      dispatch({
+        type: 'mouse_enter'
+      });
+		},
+		handleMouseLeave() {
+      dispatch({
+        type: 'mouse_leave'
+      });
+    },
+    handleChangePage(page, totalPage, spin) {
+      let originAngle = spin.style.transform.replace(/[^0-9]/ig, '');
+			if (originAngle) {
+				originAngle = parseInt(originAngle, 10);
+			} else {
+				originAngle = 0;
+			}
+      spin.style.transform = 'rotate(' + (originAngle + 360) + 'deg)';
+      
+      if (page < totalPage) {
+				dispatch(actionCreators.changePage(page + 1));
+			} else {
+				dispatch(actionCreators.changePage(1));
+			}
+		},
   }
 }
 
