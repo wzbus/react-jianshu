@@ -1,3 +1,4 @@
+import { fromJS } from 'immutable';
 import axios from 'axios';
 
 export const getList = () => {
@@ -6,7 +7,7 @@ export const getList = () => {
       const data = res.data;
       const action = {
         type: 'changeList',
-        data: data.data
+        data: fromJS(data.data)
       };
 			dispatch(action);
 		}).catch(() => {
