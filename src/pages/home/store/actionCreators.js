@@ -28,4 +28,9 @@ const addHomeList = (list, nextPage) => ({
 	type: 'add_article_list',
 	list: fromJS(list),
 	nextPage
-})
+});
+
+export const toggleTopShow = (show) => ({
+	type: 'toggle_top_scroll',
+	show
+});
