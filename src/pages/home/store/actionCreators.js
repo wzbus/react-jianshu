@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export const getHomeInfo = () => {
 	return (dispatch) => {
-		axios.get('/api/home.json').then((res) => {
+		axios.get('./api/home.json').then((res) => {
 			const result = res.data.data;
 			dispatch({
         type: 'change_home_data',
@@ -17,7 +17,7 @@ export const getHomeInfo = () => {
 
 export const getMoreList = (page) => {
 	return (dispatch) => {
-		axios.get('/api/homeList.json?page=' + page).then((res) => {
+		axios.get('./api/homeList.json?page=' + page).then((res) => {
 			const result = res.data.data;
 			dispatch(addHomeList(result, page + 1));
 		});
