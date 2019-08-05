@@ -44,6 +44,7 @@ export const NavItem = styled.div`
   }
   &.space {
     margin-right: 30px;
+    cursor: pointer;
   }
 `;
 

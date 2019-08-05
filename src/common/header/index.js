@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { actionCreators } from './store';
 import { CSSTransition } from 'react-transition-group';
+import { actionCreators } from './store';
+import { actionCreators as loginActionCreators } from '../../pages/login/store'
 import {
   HeaderWrapper,
   Logo,
@@ -59,7 +60,11 @@ class Header extends Component {
             <NavItem className='left active'>首页</NavItem>
           </Link>
           <NavItem className='left'>下载App</NavItem>
-          <NavItem className='right space'>登录</NavItem>
+          {
+						this.props.login ? 
+							<NavItem onClick={this.props.logout} className='right space'>退出</NavItem> : 
+							<Link to='/login'><NavItem className='right space'>登录</NavItem></Link>
+					}
           <NavItem className='right'>
             <i className="iconfont">&#xe600;</i>
           </NavItem>
@@ -76,10 +81,12 @@ class Header extends Component {
           </SearchWrapper>
         </Nav>
         <Addition>
-          <Button className='writting'>
-            <i className="iconfont">&#xe616;</i>
-            写文章
-          </Button>
+          <Link to='./write'>
+            <Button className='writting'>
+              <i className="iconfont">&#xe616;</i>
+              写文章
+            </Button>
+          </Link>
           <Button className='reg'>注册</Button>
         </Addition>
       </HeaderWrapper>
@@ -93,7 +100,8 @@ const mapState = (state) => {
     mouseIn: state.getIn(['header', 'mouseIn']),
     list: state.getIn(['header', 'list']),
     page: state.getIn(['header', 'page']),
-    totalPage: state.getIn(['header', 'totalPage'])
+    totalPage: state.getIn(['header', 'totalPage']),
+    login: state.getIn(['login', 'login'])
   }
 }
 
@@ -134,7 +142,10 @@ const mapDispath = (dispatch) => {
       } else {
         dispatch(actionCreators.changePage(1));
       }
-    }
+    },
+    logout() {
+			dispatch(loginActionCreators.logout())
+		}
   }
 }
 
